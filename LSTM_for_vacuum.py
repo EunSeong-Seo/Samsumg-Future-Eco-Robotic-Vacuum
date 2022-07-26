@@ -21,3 +21,5 @@ def sliding_windows(data, seq_length):
         _y = data[i+seq_length]
         x.append(_x)
         y.append(_y)
+
+#https://hongl.tistory.com/247
