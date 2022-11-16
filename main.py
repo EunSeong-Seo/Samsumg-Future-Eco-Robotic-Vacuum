@@ -255,7 +255,17 @@ if __name__ == "__main__":
     img_input = img[2]
     img_output = img[1]
 
+    np_img_input = img_input.numpy()
+    np_img_output = img_output.numpy()
+
+    np.save('Dust_Dataset/img_input', np_img_input)
+    np.save('Dust_Dataset/img_output', np_img_output)
+
     predict = inference(img_input.cuda())
+
+    np_predict = predict.cpu().numpy()
+    np.save('Dust_Dataset/img_predict', np_predict)
+
     plt.title('Input Dust Map')
     imshow(torchvision.utils.make_grid(img_input[0][:10], nrow=10))
     plt.show()

@@ -11,7 +11,7 @@ import seaborn as sns
 import math
 import pandas as pd
 
-# random.seed(1996)
+random.seed(1996)
 
 
 class DustType(Enum):
@@ -69,8 +69,8 @@ class DustMAP(data.Dataset):
         self.data = self.make_data()
 
         # Add Noise
-        self.data = np.clip(self.data + self.gaussian_noise(self.data.shape), self.min_value, self.max_value)
-        self.plot_sequence(self.data[:,:,10, 32], self.filename)
+        # self.data = np.clip(self.data + self.gaussian_noise(self.data.shape), self.min_value, self.max_value)
+        self.data = np.clip(self.data, self.min_value, self.max_value)
         input = self.data[:self.n_frames_input]
         output = self.data[self.n_frames_input:self.n_frames_total]
         frozen = input[-1]
@@ -99,7 +99,6 @@ class DustMAP(data.Dataset):
         plt.cla()
 
     def plot_sequence(self, data, filename):
-        print(data.shape)
         assert data.shape == (self.n_frames_total, 1)
         print(np.arange(1, self.n_frames_total + 1,
                         step=1, dtype=int).shape)
