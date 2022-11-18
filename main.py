@@ -28,6 +28,7 @@ from tqdm import tqdm
 import numpy as np
 from tensorboardX import SummaryWriter
 import argparse
+from torchinfo import summary
 
 TIMESTAMP = "2022-11-16T00-00-00"
 parser = argparse.ArgumentParser()
@@ -220,6 +221,7 @@ def inference(x):
     encoder = Encoder(encoder_params[0], encoder_params[1]).cuda()
     decoder = Decoder(decoder_params[0], decoder_params[1]).cuda()
     model = ED(encoder, decoder)
+    # summary(model, (4, 10, 1, 64, 64))
 
     model_info = torch.load('save_model/2022-11-16T00-00-00/checkpoint_105_0.012313.pth.tar')
     model.load_state_dict(model_info['state_dict'])
@@ -254,18 +256,11 @@ if __name__ == "__main__":
     img = data_iter.next()
     img_input = img[2]
     img_output = img[1]
-
-    np_img_input = img_input.numpy()
-    np_img_output = img_output.numpy()
-
-    np.save('Dust_Dataset/img_input', np_img_input)
-    np.save('Dust_Dataset/img_output', np_img_output)
-
+    print(img_input.shape)
     predict = inference(img_input.cuda())
 
-    np_predict = predict.cpu().numpy()
-    np.save('Dust_Dataset/img_predict', np_predict)
 
+    # plot images
     plt.title('Input Dust Map')
     imshow(torchvision.utils.make_grid(img_input[0][:10], nrow=10))
     plt.show()
@@ -276,3 +271,11 @@ if __name__ == "__main__":
     plt.title('Original Dust Map')
     imshow(torchvision.utils.make_grid(img_output[0][:10], nrow=10))
     plt.show()
+
+    # save images
+    np_img_input = img_input.numpy()
+    np_img_output = img_output.numpy()
+    np_predict = predict.cpu().numpy()
+    np.save('Dust_Dataset/img_input', np_img_input)
+    np.save('Dust_Dataset/img_output', np_img_output)
+    np.save('Dust_Dataset/img_predict', np_predict)
