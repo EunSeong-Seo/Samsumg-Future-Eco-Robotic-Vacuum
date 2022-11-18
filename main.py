@@ -248,6 +248,7 @@ if __name__ == "__main__":
     #############
     # inference #
     #############
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     testFolder = DustMAP()
     testLoader = torch.utils.data.DataLoader(testFolder,
                                               batch_size=args.batch_size,
@@ -266,10 +267,10 @@ if __name__ == "__main__":
     plt.show()
     plt.subplot(2, 1, 1)
     plt.title('Predicted Dust Map')
-    imshow(torchvision.utils.make_grid(predict[0][:10], nrow=10))
+    imshow(torchvision.utils.make_grid(torch.ones(1,64,64) - predict[0][:10].cpu(), nrow=10))
     plt.subplot(2, 1, 2)
     plt.title('Original Dust Map')
-    imshow(torchvision.utils.make_grid(img_output[0][:10], nrow=10))
+    imshow(torchvision.utils.make_grid(torch.ones(1,64,64) - img_output[0][:10].cpu(), nrow=10))
     plt.show()
 
     # save images
